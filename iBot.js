@@ -9,18 +9,18 @@ var tastyPlugShutDown;
 if (typeof tastyPlugShutDown != 'undefined') tastyPlugShutDown();
 (function(){
     var sock, afktime = Date.now(), pms = false, drag = false, hidevideo = false, joincd = false, cd = false,
-    version = '1.3.4.9', commands = {}, tos = {}, boothcd = false, reconnect = true, hover = false,
+    version = '1.0', commands = {}, tos = {}, boothcd = false, reconnect = true, hover = false,
     room = location.pathname, lastchat, curvotes = {}, togglepm = true,
-    emotes = {}, sounds = ['default','pin','meow','robot','lolping','lolbutton','skype','inception','ding','hardkick','custom'],
+    emotes = {}, sounds = [],
     settings = {
         show: true,
-        autowoot: false,
+        autowoot: true,
         autojoin: false,
         chatmentions: false,
         joinnotifs: {toggle:false,ranks:false,friends:false,lvl1:false},
         msgs: [],
         lastPM: null,
-        uipos: {'top':'54px','left':'0'},
+        uipos: {'top':'-54px','left':'0'},
         fullscreen: false,
         boothalert: false,
         boothnotify: 3,
@@ -39,7 +39,7 @@ if (typeof tastyPlugShutDown != 'undefined') tastyPlugShutDown();
             sock = new SockJS('https://fungustime.pw:4957/socket');
             sock.onopen = function() {
                 reconint = 2;
-                console.log('[TastyPlug v' + version + '] Connected to socket!');
+                console.log('[iBot v' + version + '] Connected to socket!');
                 return sock.msg({z:'userjoin',a:API.getUser(),r:location.pathname});
             };
             sock.onmessage = function(data) {
@@ -59,11 +59,11 @@ if (typeof tastyPlugShutDown != 'undefined') tastyPlugShutDown();
                     case 'reload':
                         return commands.reset();
                     default:
-                        console.log('[TastyPlug v' + version + '] Unknown socket command');
+                        console.log('[iBot v' + version + '] Unknown socket command');
                 }
             };
             sock.onclose = function() {
-                console.log('[TastyPlug v' + version + '] Disconnected from socket!');
+                console.log('[iBot v' + version + '] Disconnected from socket!');
                 if (reconnect) tos.reconnect = setTimeout(function(){
                     if (sock && sock.readyState == 3) socket();
                 },128000);
@@ -73,6 +73,7 @@ if (typeof tastyPlugShutDown != 'undefined') tastyPlugShutDown();
             $.getScript('https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js', loadSocket);
         } else loadSocket();
     }
+    
     function startup() {
         loadSettings();
         loadUI();
@@ -98,8 +99,8 @@ if (typeof tastyPlugShutDown != 'undefined') tastyPlugShutDown();
         }
         legacyChat.toggle(settings.legacychat);
         if (room == '/tastycat') socket();
-        Chat('init', 'TastyPlug v' + version + ' now running!<br>Type /commands for a list of commands.');
-        console.log('[TastyPlug v' + version + '] Now running.');
+        Chat('init', 'iBot v' + version + ' now running!<br>Type /commands for a list of commands.');
+        console.log('[iBot v' + version + '] Now running.');
     }
     function loadSettings() {
         var a = JSON.parse(localStorage.getItem('tastyPlugSettings'));
